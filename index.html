@@ -133,7 +133,7 @@
       const errorMsg = document.getElementById("error-msg");
 
       try {
-        const res = await fetch("https://raw.githubusercontent.com/username/repo/main/data.json");
+        const res = await fetch("/api/users");
         const users = await res.json();
 
         const userFound = users.find(u => u.user === username && u.password === password);
