@@ -6,7 +6,7 @@ const app = express();
 const PORT = 3000;
 
 // URL JSON dari GitHub
-const GITHUB_JSON_URL = "https://raw.githubusercontent.com/username/repo/main/data.json";
+const GITHUB_JSON_URL = "https://raw.githubusercontent.com/NussStore/cpanel/main/data.json";
 
 // Middleware serve static files (frontend)
 app.use(express.static(path.join(__dirname, "public")));
